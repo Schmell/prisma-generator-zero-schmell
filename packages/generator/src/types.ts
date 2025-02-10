@@ -17,12 +17,6 @@ export type ZeroTypeMapping = {
   isOptional?: boolean
 }
 
-// export type ZeroRelationship = {
-//   sourceField: string[]
-//   destField: string[]
-//   destSchema: string
-//   type: 'one' | 'many'
-// }
 export type ZeroRelationship = {
   sourceField: string[]
   destField: string[]
