@@ -23,14 +23,21 @@ export type ZeroTypeMapping = {
 //   destSchema: string
 //   type: 'one' | 'many'
 // }
-export type ZeroRelationship = any
+export type ZeroRelationship = {
+  sourceField: string[]
+  destField: string[]
+  destSchema: string
+  type: 'one' | 'many'
+}
 
 export type ZeroModel = {
   tableName: string
   modelName: string
   zeroTableName: string
   columns: Record<string, ZeroTypeMapping>
-  relationships?: Record<string, ZeroRelationship>
+  relationships?:
+    | Record<string, ZeroRelationship>
+    | Record<string, ZeroRelationship[]>
   primaryKey: string[]
 }
 

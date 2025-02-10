@@ -1,5 +1,10 @@
 import { DMMF } from '@prisma/generator-helper'
-import { TransformedSchema, ZeroModel, ZeroTypeMapping } from '../types'
+import {
+  TransformedSchema,
+  ZeroModel,
+  ZeroRelationship,
+  ZeroTypeMapping,
+} from '../types'
 
 const joinTables = new Set<string>()
 
@@ -67,9 +72,8 @@ function generateRelationships(models: ZeroModel[]): string {
         model.relationships && Object.keys(model.relationships).length > 0,
     )
     .map((model) => {
-      // console.log(model)
+      // i don't know how to type this, but it wasn't before anyway
       const relationshipEntries = Object.entries(model.relationships || {})
-      // console.log(relationshipEntries)
       const hasOneRelation = relationshipEntries.some(
         ([, rel]) => rel.type === 'one',
       )
@@ -84,11 +88,8 @@ function generateRelationships(models: ZeroModel[]): string {
       if (hasOneRelation) relationshipImports.push('one')
       if (hasManyRelation || hasImpicitManyRelation)
         relationshipImports.push('many')
-      // if (isImpicitManyRealtion && !hasManyRelation)
-      //   relationshipImports.push('many')
 
       const relationshipsStr = relationshipEntries.map(([name, rel]) => {
-        // console.log(rel.type)
         if (rel.type) {
           return `  ${name}: ${rel.type}({
     sourceField: ${JSON.stringify(rel.sourceField)},
@@ -96,10 +97,10 @@ function generateRelationships(models: ZeroModel[]): string {
     destSchema: ${rel.destSchema},
   }) \n`
         } else if (!rel.type) {
-          //////////////////////////////////////////////////////
-          if (rel.length !== undefined && Object.keys(rel).length > 0) {
+          // If there is no rel.type it means its an implict relation
+          if (rel.length > 0 && Object.keys(rel).length > 0) {
             let out = ''
-            rel.forEach((r: any, idx: number) => {
+            rel.forEach((r: ZeroRelationship, idx: number) => {
               // The first destSchema will be the name of the join table
               if (idx === 0) joinTables.add(r.destSchema)
 
@@ -113,8 +114,7 @@ function generateRelationships(models: ZeroModel[]): string {
 ${name}: many(
   ${out}) \n`
           }
-          // generate table
-        }
+        } // else if
       })
 
       return `export const ${model.zeroTableName}Relationships = relationships(${model.zeroTableName}, ({ ${relationshipImports} }) => ({
@@ -200,7 +200,7 @@ export function generateCode(schema: TransformedSchema): string {
     output += generateModelSchema(model)
   })
 
-  // generate relationships first to infer the join tables
+  // generate relationships first get the Set for joinTables
   const relationships = generateRelationships(schema.models)
 
   // Add join tables
