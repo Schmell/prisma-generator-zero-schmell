@@ -27,27 +27,22 @@ model User {
   Likes       Like[]         @relation("likePublisher")
   Liked       Like[]         @relation("liked")
   Comments    Comment[]
-}
-
-model Like {
-  id          Int      @id @default(autoincrement())
-  Publisher   User     @relation("likePublisher", fields: [publisherId], references: [id])
-  publisherId Int
-  LikedUser   User?    @relation("liked", fields: [userId], references: [id])
-  userId      Int?
-  Comment     Comment? @relation(fields: [commentId], references: [id])
-  commentId   Int?
-  Post        Post?    @relation(fields: [postId], references: [id])
-  postId      Int?
+  createdAt   DateTime?      @default(now())
+  updatedAt   DateTime?      @updatedAt
 }
 
 model UserProfile {
-  id        Int     @id @default(autoincrement())
-  firstname String?
-  lastname  String?
-  avatar    String?
-  user      User    @relation(fields: [userId], references: [id])
-  userId    Int     @unique // relation scalar field (used in the `@relation` attribute above)
+  id               Int       @id @default(autoincrement())
+  firstname        String?
+  lastname         String?
+  avatar           String?
+  details          Json?
+  prefferdLanguage Language?
+  isHuman          Boolean?
+  user             User      @relation(fields: [userId], references: [id])
+  userId           Int       @unique // relation scalar field (used in the `@relation` attribute above)
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
 }
 
 model UserSettings {
@@ -77,6 +72,8 @@ model Post {
   Likes       Like[]
   Tags        Tag[]
   Labels      Label[]             @relation("Post_to_Label")
+  createdAt   DateTime?           @default(now())
+  updatedAt   DateTime?           @updatedAt
 }
 
 // explicit many to many
@@ -111,10 +108,25 @@ model Label {
 }
 
 model Comment {
-  id        Int    @id @default(autoincrement())
-  Post      Post   @relation(fields: [postId], references: [id])
+  id        Int       @id @default(autoincrement())
+  Post      Post      @relation(fields: [postId], references: [id])
   postId    Int
-  Publisher User   @relation(fields: [userId], references: [id])
+  Publisher User      @relation(fields: [userId], references: [id])
   Like      Like[]
   userId    Int
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Like {
+  id          Int       @id @default(autoincrement())
+  Publisher   User      @relation("likePublisher", fields: [publisherId], references: [id])
+  publisherId Int
+  LikedUser   User?     @relation("liked", fields: [userId], references: [id])
+  userId      Int?
+  Comment     Comment?  @relation(fields: [commentId], references: [id])
+  commentId   Int?
+  Post        Post?     @relation(fields: [postId], references: [id])
+  postId      Int?
+  createdAt   DateTime? @default(now())
 }

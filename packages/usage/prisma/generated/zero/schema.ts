@@ -12,490 +12,140 @@ import {
 } from '@rocicorp/zero'
 
 // Define enums
-export enum EditorTable {
-  Series = 'Series',
-  Event = 'Event',
-  Venue = 'Venue',
-  Organization = 'Organization',
-  Result = 'Result',
-  Race = 'Race',
-}
-
-export enum Role {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  EDITOR = 'EDITOR',
-  MODERATOR = 'MODERATOR',
+export enum Language {
+  Typescript = 'Typescript',
+  Javascript = 'Javascript',
+  Rust = 'Rust',
+  Go = 'Go',
+  Python = 'Python',
+  Cpp = 'Cpp',
 }
 
 // Define tables
-export const seriesTable = table('Series')
-  .columns({
-    id: string(),
-    name: string(),
-    description: string().optional(),
-    logo: string().optional(),
-    titleImage: string().optional(),
-    organizationId: string(),
-    publisherId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    website: string().optional(),
-    complete: boolean().optional(),
-    public: boolean().optional(),
-  })
-  .primaryKey('id')
-
-export const eventTable = table('Event')
-  .columns({
-    id: string(),
-    eventeid: string().optional(),
-    uniqueIdString: string(),
-    name: string(),
-    eventwebsite: string().optional(),
-    venueName: string().optional(),
-    description: string().optional(),
-    titleImage: string().optional(),
-    public: boolean(),
-    complete: boolean(),
-    fileInfo: json().optional(),
-    resultColumns: json().optional(),
-    rest: json().optional(),
-    email: string().optional(),
-    organizationId: string().optional(),
-    publisherId: string().optional(),
-    seriesId: string().optional(),
-    venueId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    date: number().optional(),
-    scoringSystemId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const scoringSystemTable = table('ScoringSystem')
-  .columns({
-    id: string(),
-    name: string().optional(),
-    includediscards: string().optional(),
-    ratingsystem: string().optional(),
-    ratsysa: string().optional(),
-    ratsysb: string().optional(),
-    rest: json().optional(),
-  })
-  .primaryKey('id')
-
-export const raceTable = table('Race')
-  .columns({
-    id: string(),
-    raceId: string().optional(),
-    uniqueRaceString: string(),
-    name: string().optional(),
-    starts: json().optional(),
-    date: string().optional(),
-    time: string().optional(),
-    notes: string().optional(),
-    sailed: string().optional(),
-    rating: string().optional(),
-    resultColumns: json().optional(),
-    rest: json().optional(),
-    eventId: string().optional(),
-    publisherId: string().optional(),
-    createdAt: number(),
-    updatedAt: number().optional(),
-    rank: number().optional(),
-    description: string().optional(),
-  })
-  .primaryKey('id')
-
-export const compTable = table('Comp')
-  .columns({
-    id: string(),
-    compId: string(),
-    description: string().optional(),
-    raceId: string().optional(),
-    club: string().optional(),
-    boat: string().optional(),
-    skipper: string().optional(),
-    sailno: string().optional(),
-    fleet: string().optional(),
-    division: string().optional(),
-    rating: string().optional(),
-    rank: string().optional(),
-    nett: string().optional(),
-    total: string().optional(),
-    rest: json().optional(),
-    image: string().optional(),
-    publisherId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    class: string().optional(),
-    alias: string().optional(),
-    bownumber: string().optional(),
-    exclude: string().optional(),
-    fee: string().optional(),
-    high: string().optional(),
-    medical: string().optional(),
-    nat: string().optional(),
-    notes: string().optional(),
-    paid: string().optional(),
-    seeding: string().optional(),
-    skipperRest: json().optional(),
-    status: string().optional(),
-    tally: string().optional(),
-    helmid: string().optional(),
-    helmmemberno: string().optional(),
-    newrating: string().optional(),
-    privatenotes: string().optional(),
-    crew: json().optional(),
-    skipperId: string().optional(),
-    altsailno: string().optional(),
-    carriedfwd: string().optional(),
-    penalties: string().optional(),
-    medicalflag: boolean().optional(),
-  })
-  .primaryKey('id')
-
-export const participantTable = table('Participant')
-  .columns({
-    id: string(),
-    name: string().optional(),
-    sex: string().optional(),
-    email: string().optional(),
-    website: string().optional(),
-    photo: string().optional(),
-    phone: string().optional(),
-    agegroup: string().optional(),
-    memberno: string().optional(),
-    notes: string().optional(),
-    isafno: string().optional(),
-    compId: string().optional(),
-    hasEmail: boolean().optional(),
-    isafid: string().optional(),
-  })
-  .primaryKey('id')
-
-export const resultTable = table('Result')
-  .columns({
-    id: string(),
-    resultId: string(),
-    points: string().optional(),
-    position: string().optional(),
-    discard: string().optional(),
-    resultType: string().optional(),
-    code: string().optional(),
-    start: string().optional(),
-    finish: string().optional(),
-    corrected: string().optional(),
-    elapsedWin: string().optional(),
-    ratingWin: string().optional(),
-    raceRating: string().optional(),
-    supposedRating: string().optional(),
-    rrset: string().optional(),
-    publisherId: string(),
-    eventId: string().optional(),
-    compId: string().optional(),
-    raceId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    fleet: string().optional(),
-    raceCompId: string().optional(),
-    elapsed: string().optional(),
-    division: string().optional(),
-  })
-  .primaryKey('id')
-
-export const organizationTable = table('Organization')
-  .columns({
-    id: string(),
-    name: string(),
-    description: string().optional(),
-    tag: string().optional(),
-    website: string().optional(),
-    email: string().optional(),
-    logo: string().optional(),
-    titleImage: string().optional(),
-    ownerId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    public: boolean().optional(),
-    venueId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const editorTable = table('Editor')
-  .columns({
-    type: enumeration<EditorTable>(),
-    role: enumeration<Role>().optional(),
-    userId: string(),
-    venueId: string().optional(),
-    resultId: string().optional(),
-    organizationId: string().optional(),
-    seriesId: string().optional(),
-    eventId: string().optional(),
-    raceId: string().optional(),
-    compId: string().optional(),
-    participantId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    id: string(),
-  })
-  .primaryKey('id')
-
-export const venueTable = table('Venue')
-  .columns({
-    id: string(),
-    name: string(),
-    description: string().optional(),
-    website: string().optional(),
-    email: string().optional(),
-    phone: string().optional(),
-    burgee: string().optional(),
-    titleImage: string().optional(),
-    publisherId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    public: boolean(),
-  })
-  .primaryKey('id')
-
-export const addressTable = table('Address')
-  .columns({
-    id: string(),
-    label: string(),
-    po: string().optional(),
-    street: string().optional(),
-    city: string().optional(),
-    state: string().optional(),
-    country: string().optional(),
-    code: string().optional(),
-    venueId: string().optional(),
-    organizationId: string().optional(),
-    publisherId: string().optional(),
-    default: boolean(),
-    sponsorId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const contactTable = table('Contact')
-  .columns({
-    id: string(),
-    label: string(),
-    type: string().optional(),
-    email: string().optional(),
-    phone: string().optional(),
-    addressId: string().optional(),
-    userId: string().optional(),
-    venueId: string().optional(),
-    organizationId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    default: boolean(),
-    sponsorId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const documentTable = table('Document')
-  .columns({
-    id: string(),
-    url: string(),
-    pathname: string(),
-    size: number().optional(),
-    uploadedAt: number().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    eventId: string().optional(),
-    contentDisposition: string().optional(),
-    contentType: string().optional(),
-    title: string(),
-    publisherId: string().optional(),
-    organizationId: string().optional(),
-    venueId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const assetTable = table('Asset')
-  .columns({
-    id: string(),
-    type: string(),
-    userId: string(),
-    url: string(),
-    appUrl: string().optional(),
-    customId: string().optional(),
-    key: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-    size: number().optional(),
-    name: string(),
-  })
-  .primaryKey('id')
-
-export const commentTable = table('Comment')
-  .columns({
-    id: string(),
-    type: string().optional(),
-    ref: string().optional(),
-    comment: string(),
-    eventId: string().optional(),
-    userId: string(),
-    raceId: string().optional(),
-    seriesId: string().optional(),
-    organizationId: string().optional(),
-    venueId: string().optional(),
-    compId: string().optional(),
-    createdAt: number().optional(),
-    updatedAt: number().optional(),
-  })
-  .primaryKey('id')
-
-export const followTable = table('Follow')
-  .columns({
-    id: string(),
-    type: string(),
-    itemId: string().optional(),
-    userId: string(),
-    commentId: string().optional(),
-    compId: string().optional(),
-    eventId: string().optional(),
-    organizationId: string().optional(),
-    venueId: string().optional(),
-    raceId: string().optional(),
-    seriesId: string().optional(),
-    updatedAt: number(),
-    createdAt: number(),
-    FollowedId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const likeTable = table('Like')
-  .columns({
-    id: string(),
-    userId: string(),
-    type: string(),
-    itemId: string().optional(),
-    seriesId: string().optional(),
-    eventId: string().optional(),
-    organizationId: string().optional(),
-    raceId: string().optional(),
-    compId: string().optional(),
-    updatedAt: number(),
-    createdAt: number(),
-    commentId: string().optional(),
-    venueId: string().optional(),
-    likedUserId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const socialTable = table('Social')
-  .columns({
-    id: string(),
-    platform: string(),
-    value: string(),
-    userId: string().optional(),
-    contactId: string().optional(),
-    venueId: string().optional(),
-    organizationId: string().optional(),
-    compId: string().optional(),
-    eventId: string().optional(),
-    seriesId: string().optional(),
-  })
-  .primaryKey('id')
-
-export const sponsorTable = table('Sponsor')
-  .columns({
-    id: string(),
-    name: string(),
-    description: string().optional(),
-    website: string().optional(),
-    email: string().optional(),
-    titleImage: string().optional(),
-    logo: string().optional(),
-    organizationId: string().optional(),
-    eventId: string().optional(),
-    compId: string().optional(),
-    seriesId: string().optional(),
-    venueId: string().optional(),
-    level: string().optional(),
-  })
-  .primaryKey('id')
-
 export const userTable = table('User')
   .columns({
-    id: string(),
-    username: string(),
-    firstname: string().optional(),
-    lastname: string().optional(),
-    email: string().optional(),
-    email_verified: number().optional(),
-    name: string().optional(),
-    avatar: string().optional(),
+    id: number(),
+    email: string(),
+    createdAt: number().optional(),
+    updatedAt: number().optional(),
   })
   .primaryKey('id')
 
-export const userCompTable = table('UserComp')
+export const userProfileTable = table('UserProfile')
   .columns({
-    id: string(),
-    role: string(),
-    compId: string(),
+    id: number(),
+    firstname: string().optional(),
+    lastname: string().optional(),
+    avatar: string().optional(),
+    details: json().optional(),
+    prefferdLanguage: enumeration<Language>().optional(),
+    isHuman: boolean().optional(),
+    userId: number(),
+    createdAt: number().optional(),
+    updatedAt: number().optional(),
   })
   .primaryKey('id')
 
 export const userSettingsTable = table('UserSettings')
   .columns({
-    id: string(),
-    theme: string().optional(),
-    language: string().optional(),
-    userId: string().optional(),
+    id: number(),
+    userId: number(),
   })
   .primaryKey('id')
 
-export const sessionTable = table('Session')
+export const manyTable = table('Many')
   .columns({
-    id: string(),
-    user_id: string(),
-    active_expires: number(),
-    idle_expires: number(),
+    id: number(),
   })
   .primaryKey('id')
 
-export const keyTable = table('Key')
+export const otherTable = table('Other')
   .columns({
-    id: string(),
-    hashed_password: string().optional(),
-    user_id: string(),
+    id: number(),
   })
   .primaryKey('id')
 
-export const verificationTokenTable = table('VerificationToken')
+export const postTable = table('Post')
   .columns({
-    id: string(),
-    user_id: string(),
-    expires: number(),
+    id: number(),
+    title: string(),
+    publisherId: number(),
+    createdAt: number().optional(),
+    updatedAt: number().optional(),
   })
   .primaryKey('id')
 
-export const __SeriesToVenue = table('__SeriesToVenue')
+export const categoryTable = table('Category')
+  .columns({
+    id: number(),
+    name: string(),
+  })
+  .primaryKey('id')
+
+export const categoriesOnPostsTable = table('CategoriesOnPosts')
+  .columns({
+    postId: number(),
+    categoryId: number(),
+    assignedAt: number(),
+    assignedBy: string(),
+  })
+  .primaryKey('postId', 'categoryId')
+
+export const tagTable = table('Tag')
+  .columns({
+    id: number(),
+  })
+  .primaryKey('id')
+
+export const labelTable = table('Label')
+  .columns({
+    id: number(),
+  })
+  .primaryKey('id')
+
+export const commentTable = table('Comment')
+  .columns({
+    id: number(),
+    postId: number(),
+    userId: number(),
+    createdAt: number().optional(),
+    updatedAt: number().optional(),
+  })
+  .primaryKey('id')
+
+export const likeTable = table('Like')
+  .columns({
+    id: number(),
+    publisherId: number(),
+    userId: number().optional(),
+    commentId: number().optional(),
+    postId: number().optional(),
+    createdAt: number().optional(),
+  })
+  .primaryKey('id')
+
+export const _UserToMany = table('_UserToMany')
   .columns({
     A: string(),
     B: string(),
   })
   .primaryKey('A', 'B')
 
-export const _CompToEvent = table('_CompToEvent')
+export const _ManyToOther = table('_ManyToOther')
   .columns({
     A: string(),
     B: string(),
   })
   .primaryKey('A', 'B')
 
-export const _CompToRace = table('_CompToRace')
+export const _PostToTag = table('_PostToTag')
   .columns({
     A: string(),
     B: string(),
   })
   .primaryKey('A', 'B')
 
-export const _OrganizationToVenue = table('_OrganizationToVenue')
+export const _Post_to_Label = table('_Post_to_Label')
   .columns({
     A: string(),
     B: string(),
@@ -503,1023 +153,61 @@ export const _OrganizationToVenue = table('_OrganizationToVenue')
   .primaryKey('A', 'B')
 
 // Define relationships
-export const seriesTableRelationships = relationships(
-  seriesTable,
-  ({ one, many }) => ({
-    Comments: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: commentTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: editorTable,
-    }),
-    Events: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: eventTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: likeTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: socialTable,
-    }),
-    Sponsors: many({
-      sourceField: ['id'],
-      destField: ['seriesId'],
-      destSchema: sponsorTable,
-    }),
-    Venues: many(
-      {
-        sourceField: ['id'],
-        destField: ['B'],
-        destSchema: __SeriesToVenue,
-      },
-      {
-        sourceField: ['A'],
-        destField: ['id'],
-        destSchema: venueTable,
-      },
-    ),
-  }),
-)
-
-export const eventTableRelationships = relationships(
-  eventTable,
-  ({ one, many }) => ({
-    Comments: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: commentTable,
-    }),
-    Documents: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: documentTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: editorTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    ScoringSystem: one({
-      sourceField: ['scoringSystemId'],
-      destField: ['id'],
-      destSchema: scoringSystemTable,
-    }),
-    Series: one({
-      sourceField: ['seriesId'],
-      destField: ['id'],
-      destSchema: seriesTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: likeTable,
-    }),
-    Races: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: raceTable,
-    }),
-    Results: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: resultTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: socialTable,
-    }),
-    Sponsors: many({
-      sourceField: ['id'],
-      destField: ['eventId'],
-      destSchema: sponsorTable,
-    }),
-    Comps: many(
-      {
-        sourceField: ['id'],
-        destField: ['A'],
-        destSchema: _CompToEvent,
-      },
-      {
-        sourceField: ['B'],
-        destField: ['id'],
-        destSchema: compTable,
-      },
-    ),
-  }),
-)
-
-export const scoringSystemTableRelationships = relationships(
-  scoringSystemTable,
-  ({ many }) => ({
-    Event: many({
-      sourceField: ['id'],
-      destField: ['scoringSystemId'],
-      destSchema: eventTable,
-    }),
-  }),
-)
-
-export const raceTableRelationships = relationships(
-  raceTable,
-  ({ one, many }) => ({
-    Comments: many({
-      sourceField: ['id'],
-      destField: ['raceId'],
-      destSchema: commentTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['raceId'],
-      destSchema: editorTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['raceId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['raceId'],
-      destSchema: likeTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Results: many({
-      sourceField: ['id'],
-      destField: ['raceId'],
-      destSchema: resultTable,
-    }),
-    Comps: many(
-      {
-        sourceField: ['id'],
-        destField: ['A'],
-        destSchema: _CompToRace,
-      },
-      {
-        sourceField: ['B'],
-        destField: ['id'],
-        destSchema: compTable,
-      },
-    ),
-  }),
-)
-
-export const compTableRelationships = relationships(
-  compTable,
-  ({ one, many }) => ({
-    Commments: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: commentTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Skipper: one({
-      sourceField: ['skipperId'],
-      destField: ['id'],
-      destSchema: participantTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: editorTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: likeTable,
-    }),
-    Crew: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: participantTable,
-    }),
-    Results: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: resultTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: socialTable,
-    }),
-    Sponsors: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: sponsorTable,
-    }),
-    UserComps: many({
-      sourceField: ['id'],
-      destField: ['compId'],
-      destSchema: userCompTable,
-    }),
-    Events: many(
-      {
-        sourceField: ['id'],
-        destField: ['B'],
-        destSchema: _CompToEvent,
-      },
-      {
-        sourceField: ['A'],
-        destField: ['id'],
-        destSchema: eventTable,
-      },
-    ),
-    Races: many(
-      {
-        sourceField: ['id'],
-        destField: ['B'],
-        destSchema: _CompToRace,
-      },
-      {
-        sourceField: ['A'],
-        destField: ['id'],
-        destSchema: raceTable,
-      },
-    ),
-  }),
-)
-
-export const participantTableRelationships = relationships(
-  participantTable,
-  ({ one, many }) => ({
-    Skipper: many({
-      sourceField: ['id'],
-      destField: ['skipperId'],
-      destSchema: compTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['participantId'],
-      destSchema: editorTable,
-    }),
-    Crew: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-  }),
-)
-
-export const resultTableRelationships = relationships(
-  resultTable,
-  ({ one, many }) => ({
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['resultId'],
-      destSchema: editorTable,
-    }),
-    Comp: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Race: one({
-      sourceField: ['raceId'],
-      destField: ['id'],
-      destSchema: raceTable,
-    }),
-  }),
-)
-
-export const organizationTableRelationships = relationships(
-  organizationTable,
-  ({ one, many }) => ({
-    Addresses: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: addressTable,
-    }),
-    Comments: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: commentTable,
-    }),
-    Contact: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: contactTable,
-    }),
-    Documents: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: documentTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: editorTable,
-    }),
-    Events: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: eventTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: likeTable,
-    }),
-    Owner: one({
-      sourceField: ['ownerId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Series: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: seriesTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: socialTable,
-    }),
-    Sponsors: many({
-      sourceField: ['id'],
-      destField: ['organizationId'],
-      destSchema: sponsorTable,
-    }),
-    Venues: many(
-      {
-        sourceField: ['id'],
-        destField: ['B'],
-        destSchema: _OrganizationToVenue,
-      },
-      {
-        sourceField: ['A'],
-        destField: ['id'],
-        destSchema: venueTable,
-      },
-    ),
-  }),
-)
-
-export const editorTableRelationships = relationships(
-  editorTable,
-  ({ one }) => ({
-    Comp: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Participant: one({
-      sourceField: ['participantId'],
-      destField: ['id'],
-      destSchema: participantTable,
-    }),
-    Race: one({
-      sourceField: ['raceId'],
-      destField: ['id'],
-      destSchema: raceTable,
-    }),
-    Result: one({
-      sourceField: ['resultId'],
-      destField: ['id'],
-      destSchema: resultTable,
-    }),
-    Series: one({
-      sourceField: ['seriesId'],
-      destField: ['id'],
-      destSchema: seriesTable,
-    }),
-    User: one({
-      sourceField: ['userId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-  }),
-)
-
-export const venueTableRelationships = relationships(
-  venueTable,
-  ({ one, many }) => ({
-    Addresses: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: addressTable,
-    }),
-    Comments: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: commentTable,
-    }),
-    Contacts: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: contactTable,
-    }),
-    Documents: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: documentTable,
-    }),
-    Editors: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: editorTable,
-    }),
-    Events: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: eventTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: likeTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: socialTable,
-    }),
-    Sponsors: many({
-      sourceField: ['id'],
-      destField: ['venueId'],
-      destSchema: sponsorTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Organizations: many(
-      {
-        sourceField: ['id'],
-        destField: ['A'],
-        destSchema: _OrganizationToVenue,
-      },
-      {
-        sourceField: ['B'],
-        destField: ['id'],
-        destSchema: organizationTable,
-      },
-    ),
-    Series: many(
-      {
-        sourceField: ['id'],
-        destField: ['A'],
-        destSchema: __SeriesToVenue,
-      },
-      {
-        sourceField: ['B'],
-        destField: ['id'],
-        destSchema: seriesTable,
-      },
-    ),
-  }),
-)
-
-export const addressTableRelationships = relationships(
-  addressTable,
-  ({ one, many }) => ({
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Sponsor: one({
-      sourceField: ['sponsorId'],
-      destField: ['id'],
-      destSchema: sponsorTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-    Contact: many({
-      sourceField: ['id'],
-      destField: ['addressId'],
-      destSchema: contactTable,
-    }),
-  }),
-)
-
-export const contactTableRelationships = relationships(
-  contactTable,
-  ({ one, many }) => ({
-    Address: one({
-      sourceField: ['addressId'],
-      destField: ['id'],
-      destSchema: addressTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Sponsor: one({
-      sourceField: ['sponsorId'],
-      destField: ['id'],
-      destSchema: sponsorTable,
-    }),
-    User: one({
-      sourceField: ['userId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['contactId'],
-      destSchema: socialTable,
-    }),
-  }),
-)
-
-export const documentTableRelationships = relationships(
-  documentTable,
-  ({ one }) => ({
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Publisher: one({
-      sourceField: ['publisherId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-  }),
-)
-
-export const assetTableRelationships = relationships(assetTable, ({ one }) => ({
-  User: one({
-    sourceField: ['userId'],
-    destField: ['id'],
-    destSchema: userTable,
-  }),
-}))
-
-export const commentTableRelationships = relationships(
-  commentTable,
-  ({ one, many }) => ({
-    Comp: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Race: one({
-      sourceField: ['raceId'],
-      destField: ['id'],
-      destSchema: raceTable,
-    }),
-    Series: one({
-      sourceField: ['seriesId'],
-      destField: ['id'],
-      destSchema: seriesTable,
-    }),
-    User: one({
-      sourceField: ['userId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-    Follow: many({
-      sourceField: ['id'],
-      destField: ['commentId'],
-      destSchema: followTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['commentId'],
-      destSchema: likeTable,
-    }),
-  }),
-)
-
-export const followTableRelationships = relationships(
-  followTable,
-  ({ one }) => ({
-    Followed: one({
-      sourceField: ['FollowedId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Comment: one({
-      sourceField: ['commentId'],
-      destField: ['id'],
-      destSchema: commentTable,
-    }),
-    Comp: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Race: one({
-      sourceField: ['raceId'],
-      destField: ['id'],
-      destSchema: raceTable,
-    }),
-    Series: one({
-      sourceField: ['seriesId'],
-      destField: ['id'],
-      destSchema: seriesTable,
-    }),
-    User: one({
-      sourceField: ['userId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-  }),
-)
-
-export const likeTableRelationships = relationships(likeTable, ({ one }) => ({
-  Comment: one({
-    sourceField: ['commentId'],
-    destField: ['id'],
-    destSchema: commentTable,
-  }),
-  Comp: one({
-    sourceField: ['compId'],
-    destField: ['id'],
-    destSchema: compTable,
-  }),
-  Event: one({
-    sourceField: ['eventId'],
-    destField: ['id'],
-    destSchema: eventTable,
-  }),
-  LikedUser: one({
-    sourceField: ['likedUserId'],
-    destField: ['id'],
-    destSchema: userTable,
-  }),
-  Organization: one({
-    sourceField: ['organizationId'],
-    destField: ['id'],
-    destSchema: organizationTable,
-  }),
-  Race: one({
-    sourceField: ['raceId'],
-    destField: ['id'],
-    destSchema: raceTable,
-  }),
-  Series: one({
-    sourceField: ['seriesId'],
-    destField: ['id'],
-    destSchema: seriesTable,
-  }),
-  User: one({
-    sourceField: ['userId'],
-    destField: ['id'],
-    destSchema: userTable,
-  }),
-  Venue: one({
-    sourceField: ['venueId'],
-    destField: ['id'],
-    destSchema: venueTable,
-  }),
-}))
-
-export const socialTableRelationships = relationships(
-  socialTable,
-  ({ one }) => ({
-    Comp: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-    Contact: one({
-      sourceField: ['contactId'],
-      destField: ['id'],
-      destSchema: contactTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Series: one({
-      sourceField: ['seriesId'],
-      destField: ['id'],
-      destSchema: seriesTable,
-    }),
-    User: one({
-      sourceField: ['userId'],
-      destField: ['id'],
-      destSchema: userTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-  }),
-)
-
-export const sponsorTableRelationships = relationships(
-  sponsorTable,
-  ({ one, many }) => ({
-    Addresses: many({
-      sourceField: ['id'],
-      destField: ['sponsorId'],
-      destSchema: addressTable,
-    }),
-    Contacts: many({
-      sourceField: ['id'],
-      destField: ['sponsorId'],
-      destSchema: contactTable,
-    }),
-    Comp: one({
-      sourceField: ['compId'],
-      destField: ['id'],
-      destSchema: compTable,
-    }),
-    Event: one({
-      sourceField: ['eventId'],
-      destField: ['id'],
-      destSchema: eventTable,
-    }),
-    Organization: one({
-      sourceField: ['organizationId'],
-      destField: ['id'],
-      destSchema: organizationTable,
-    }),
-    Series: one({
-      sourceField: ['seriesId'],
-      destField: ['id'],
-      destSchema: seriesTable,
-    }),
-    Venue: one({
-      sourceField: ['venueId'],
-      destField: ['id'],
-      destSchema: venueTable,
-    }),
-  }),
-)
-
 export const userTableRelationships = relationships(
   userTable,
   ({ one, many }) => ({
-    Address: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: addressTable,
-    }),
-    Asset: many({
+    UserProfile: one({
       sourceField: ['id'],
       destField: ['userId'],
-      destSchema: assetTable,
+      destSchema: userProfileTable,
     }),
-    Comments: many({
-      sourceField: ['id'],
-      destField: ['userId'],
-      destSchema: commentTable,
-    }),
-    Comps: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: compTable,
-    }),
-    Contact: many({
-      sourceField: ['id'],
-      destField: ['userId'],
-      destSchema: contactTable,
-    }),
-    Document: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: documentTable,
-    }),
-    Editor: one({
-      sourceField: ['id'],
-      destField: ['userId'],
-      destSchema: editorTable,
-    }),
-    Events: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: eventTable,
-    }),
-    Followed: many({
-      sourceField: ['id'],
-      destField: ['FollowedId'],
-      destSchema: followTable,
-    }),
-    Follows: many({
-      sourceField: ['id'],
-      destField: ['userId'],
-      destSchema: followTable,
-    }),
-    auth_key: many({
-      sourceField: ['id'],
-      destField: ['user_id'],
-      destSchema: keyTable,
-    }),
-    Liked: many({
-      sourceField: ['id'],
-      destField: ['likedUserId'],
-      destSchema: likeTable,
-    }),
-    Likes: many({
-      sourceField: ['id'],
-      destField: ['userId'],
-      destSchema: likeTable,
-    }),
-    Organizations: many({
-      sourceField: ['id'],
-      destField: ['ownerId'],
-      destSchema: organizationTable,
-    }),
-    Races: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: raceTable,
-    }),
-    Results: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: resultTable,
-    }),
-    Series: many({
-      sourceField: ['id'],
-      destField: ['publisherId'],
-      destSchema: seriesTable,
-    }),
-    auth_session: many({
-      sourceField: ['id'],
-      destField: ['user_id'],
-      destSchema: sessionTable,
-    }),
-    Socials: many({
-      sourceField: ['id'],
-      destField: ['userId'],
-      destSchema: socialTable,
-    }),
-    UserSettings: one({
+    Settings: many({
       sourceField: ['id'],
       destField: ['userId'],
       destSchema: userSettingsTable,
     }),
-    Venues: many({
+    Posts: many({
       sourceField: ['id'],
       destField: ['publisherId'],
-      destSchema: venueTable,
+      destSchema: postTable,
     }),
+    Likes: many({
+      sourceField: ['id'],
+      destField: ['publisherId'],
+      destSchema: likeTable,
+    }),
+    Liked: many({
+      sourceField: ['id'],
+      destField: ['userId'],
+      destSchema: likeTable,
+    }),
+    Comments: many({
+      sourceField: ['id'],
+      destField: ['userId'],
+      destSchema: commentTable,
+    }),
+    Manys: many(
+      {
+        sourceField: ['id'],
+        destField: ['B'],
+        destSchema: _UserToMany,
+      },
+      {
+        sourceField: ['A'],
+        destField: ['id'],
+        destSchema: manyTable,
+      },
+    ),
   }),
 )
 
-export const userCompTableRelationships = relationships(
-  userCompTable,
+export const userProfileTableRelationships = relationships(
+  userProfileTable,
   ({ one }) => ({
-    Comp: one({
-      sourceField: ['compId'],
+    user: one({
+      sourceField: ['userId'],
       destField: ['id'],
-      destSchema: compTable,
+      destSchema: userTable,
     }),
   }),
 )
@@ -1527,7 +215,7 @@ export const userCompTableRelationships = relationships(
 export const userSettingsTableRelationships = relationships(
   userSettingsTable,
   ({ one }) => ({
-    user: one({
+    User: one({
       sourceField: ['userId'],
       destField: ['id'],
       destSchema: userTable,
@@ -1535,113 +223,255 @@ export const userSettingsTableRelationships = relationships(
   }),
 )
 
-export const sessionTableRelationships = relationships(
-  sessionTable,
-  ({ one }) => ({
-    user: one({
-      sourceField: ['user_id'],
+export const manyTableRelationships = relationships(manyTable, ({ many }) => ({
+  Users: many(
+    {
+      sourceField: ['id'],
+      destField: ['A'],
+      destSchema: _UserToMany,
+    },
+    {
+      sourceField: ['B'],
       destField: ['id'],
       destSchema: userTable,
+    },
+  ),
+  Others: many(
+    {
+      sourceField: ['id'],
+      destField: ['B'],
+      destSchema: _ManyToOther,
+    },
+    {
+      sourceField: ['A'],
+      destField: ['id'],
+      destSchema: otherTable,
+    },
+  ),
+}))
+
+export const otherTableRelationships = relationships(
+  otherTable,
+  ({ many }) => ({
+    Manys: many(
+      {
+        sourceField: ['id'],
+        destField: ['A'],
+        destSchema: _ManyToOther,
+      },
+      {
+        sourceField: ['B'],
+        destField: ['id'],
+        destSchema: manyTable,
+      },
+    ),
+  }),
+)
+
+export const postTableRelationships = relationships(
+  postTable,
+  ({ one, many }) => ({
+    categories: many({
+      sourceField: ['id'],
+      destField: ['postId'],
+      destSchema: categoriesOnPostsTable,
+    }),
+    Publisher: one({
+      sourceField: ['publisherId'],
+      destField: ['id'],
+      destSchema: userTable,
+    }),
+    Comments: many({
+      sourceField: ['id'],
+      destField: ['postId'],
+      destSchema: commentTable,
+    }),
+    Likes: many({
+      sourceField: ['id'],
+      destField: ['postId'],
+      destSchema: likeTable,
+    }),
+    Tags: many(
+      {
+        sourceField: ['id'],
+        destField: ['B'],
+        destSchema: _PostToTag,
+      },
+      {
+        sourceField: ['A'],
+        destField: ['id'],
+        destSchema: tagTable,
+      },
+    ),
+    Labels: many(
+      {
+        sourceField: ['id'],
+        destField: ['A'],
+        destSchema: _Post_to_Label,
+      },
+      {
+        sourceField: ['B'],
+        destField: ['id'],
+        destSchema: labelTable,
+      },
+    ),
+  }),
+)
+
+export const categoryTableRelationships = relationships(
+  categoryTable,
+  ({ many }) => ({
+    posts: many({
+      sourceField: ['id'],
+      destField: ['categoryId'],
+      destSchema: categoriesOnPostsTable,
     }),
   }),
 )
 
-export const keyTableRelationships = relationships(keyTable, ({ one }) => ({
-  user: one({
-    sourceField: ['user_id'],
+export const categoriesOnPostsTableRelationships = relationships(
+  categoriesOnPostsTable,
+  ({ one }) => ({
+    post: one({
+      sourceField: ['postId'],
+      destField: ['id'],
+      destSchema: postTable,
+    }),
+    category: one({
+      sourceField: ['categoryId'],
+      destField: ['id'],
+      destSchema: categoryTable,
+    }),
+  }),
+)
+
+export const tagTableRelationships = relationships(tagTable, ({ many }) => ({
+  Posts: many(
+    {
+      sourceField: ['id'],
+      destField: ['A'],
+      destSchema: _PostToTag,
+    },
+    {
+      sourceField: ['B'],
+      destField: ['id'],
+      destSchema: postTable,
+    },
+  ),
+}))
+
+export const labelTableRelationships = relationships(
+  labelTable,
+  ({ many }) => ({
+    Posts: many(
+      {
+        sourceField: ['id'],
+        destField: ['A'],
+        destSchema: _Post_to_Label,
+      },
+      {
+        sourceField: ['B'],
+        destField: ['id'],
+        destSchema: postTable,
+      },
+    ),
+  }),
+)
+
+export const commentTableRelationships = relationships(
+  commentTable,
+  ({ one, many }) => ({
+    Post: one({
+      sourceField: ['postId'],
+      destField: ['id'],
+      destSchema: postTable,
+    }),
+    Publisher: one({
+      sourceField: ['userId'],
+      destField: ['id'],
+      destSchema: userTable,
+    }),
+    Like: many({
+      sourceField: ['id'],
+      destField: ['commentId'],
+      destSchema: likeTable,
+    }),
+  }),
+)
+
+export const likeTableRelationships = relationships(likeTable, ({ one }) => ({
+  Publisher: one({
+    sourceField: ['publisherId'],
     destField: ['id'],
     destSchema: userTable,
+  }),
+  LikedUser: one({
+    sourceField: ['userId'],
+    destField: ['id'],
+    destSchema: userTable,
+  }),
+  Comment: one({
+    sourceField: ['commentId'],
+    destField: ['id'],
+    destSchema: commentTable,
+  }),
+  Post: one({
+    sourceField: ['postId'],
+    destField: ['id'],
+    destSchema: postTable,
   }),
 }))
 
 // Define schema
-export const schema = createSchema(8, {
+export const schema = createSchema(9, {
   tables: [
-    __SeriesToVenue,
-    _CompToEvent,
-    _CompToRace,
-    _OrganizationToVenue,
-    seriesTable,
-    eventTable,
-    scoringSystemTable,
-    raceTable,
-    compTable,
-    participantTable,
-    resultTable,
-    organizationTable,
-    editorTable,
-    venueTable,
-    addressTable,
-    contactTable,
-    documentTable,
-    assetTable,
-    commentTable,
-    followTable,
-    likeTable,
-    socialTable,
-    sponsorTable,
+    _UserToMany,
+    _ManyToOther,
+    _PostToTag,
+    _Post_to_Label,
     userTable,
-    userCompTable,
+    userProfileTable,
     userSettingsTable,
-    sessionTable,
-    keyTable,
-    verificationTokenTable,
+    manyTable,
+    otherTable,
+    postTable,
+    categoryTable,
+    categoriesOnPostsTable,
+    tagTable,
+    labelTable,
+    commentTable,
+    likeTable,
   ],
   relationships: [
-    seriesTableRelationships,
-    eventTableRelationships,
-    scoringSystemTableRelationships,
-    raceTableRelationships,
-    compTableRelationships,
-    participantTableRelationships,
-    resultTableRelationships,
-    organizationTableRelationships,
-    editorTableRelationships,
-    venueTableRelationships,
-    addressTableRelationships,
-    contactTableRelationships,
-    documentTableRelationships,
-    assetTableRelationships,
-    commentTableRelationships,
-    followTableRelationships,
-    likeTableRelationships,
-    socialTableRelationships,
-    sponsorTableRelationships,
     userTableRelationships,
-    userCompTableRelationships,
+    userProfileTableRelationships,
     userSettingsTableRelationships,
-    sessionTableRelationships,
-    keyTableRelationships,
+    manyTableRelationships,
+    otherTableRelationships,
+    postTableRelationships,
+    categoryTableRelationships,
+    categoriesOnPostsTableRelationships,
+    tagTableRelationships,
+    labelTableRelationships,
+    commentTableRelationships,
+    likeTableRelationships,
   ],
 })
 
 // Define types
 export type Schema = typeof schema
-export type Series = Row<typeof schema.tables.Series>
-export type Event = Row<typeof schema.tables.Event>
-export type ScoringSystem = Row<typeof schema.tables.ScoringSystem>
-export type Race = Row<typeof schema.tables.Race>
-export type Comp = Row<typeof schema.tables.Comp>
-export type Participant = Row<typeof schema.tables.Participant>
-export type Result = Row<typeof schema.tables.Result>
-export type Organization = Row<typeof schema.tables.Organization>
-export type Editor = Row<typeof schema.tables.Editor>
-export type Venue = Row<typeof schema.tables.Venue>
-export type Address = Row<typeof schema.tables.Address>
-export type Contact = Row<typeof schema.tables.Contact>
-export type Document = Row<typeof schema.tables.Document>
-export type Asset = Row<typeof schema.tables.Asset>
-export type Comment = Row<typeof schema.tables.Comment>
-export type Follow = Row<typeof schema.tables.Follow>
-export type Like = Row<typeof schema.tables.Like>
-export type Social = Row<typeof schema.tables.Social>
-export type Sponsor = Row<typeof schema.tables.Sponsor>
 export type User = Row<typeof schema.tables.User>
-export type UserComp = Row<typeof schema.tables.UserComp>
+export type UserProfile = Row<typeof schema.tables.UserProfile>
 export type UserSettings = Row<typeof schema.tables.UserSettings>
-export type Session = Row<typeof schema.tables.Session>
-export type Key = Row<typeof schema.tables.Key>
-export type VerificationToken = Row<typeof schema.tables.VerificationToken>
+export type Many = Row<typeof schema.tables.Many>
+export type Other = Row<typeof schema.tables.Other>
+export type Post = Row<typeof schema.tables.Post>
+export type Category = Row<typeof schema.tables.Category>
+export type CategoriesOnPosts = Row<typeof schema.tables.CategoriesOnPosts>
+export type Tag = Row<typeof schema.tables.Tag>
+export type Label = Row<typeof schema.tables.Label>
+export type Comment = Row<typeof schema.tables.Comment>
+export type Like = Row<typeof schema.tables.Like>
 
 // DO NOT TOUCH THIS. The schema hash is used to determine if the schema has changed and correctly update the version.
-// Schema hash: 9b75dc16873cfd475d9fc8911c0b11f2bc07580591788c2b62886c25bf3c2bbd
+// Schema hash: 4e6f0579d39b9c7ad9c986d5bd67a1e62f9c6a891bfb85003cf2b63419da1fe9
